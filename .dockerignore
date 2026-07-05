@@ -1,0 +1,6 @@
+.git
+.gitignore
+README.md
+schema.sql
+.env
+.env.example
