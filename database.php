@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/db_compat.php';
+require_once __DIR__ . '/config.php';
 
-$config = require __DIR__ . '/config.php';
+$config = app_config();
 $dbConfig = $config['db'];
 
 /**

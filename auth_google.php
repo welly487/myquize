@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/session_init.php';
 
-$config = require __DIR__ . '/config.php';
+require_once __DIR__ . '/config.php';
+$config = app_config();
 $google = $config['google'];
 
 if (empty($google['client_id']) || empty($google['redirect_uri'])) {

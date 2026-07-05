@@ -96,8 +96,10 @@ docker run -p 8080:80 --env-file .env myquize
 - ✅ 修補「模擬考試」原本沒有檢查試卷歸屬的漏洞（原本登入後可用別人的 quiz_id 偷看/作答其他人的試卷）。
 - ✅ CSV 匯入加上副檔名檢查與上傳錯誤檢查。
 - ✅ 資料庫帳密／Google 用戶端密鑰全部改用環境變數，不再寫死在程式碼裡。
+- ✅ 所有資料表都啟用 **Row Level Security**（不加 policy），擋掉 Supabase 自動曝露出來的 REST API（anon/authenticated key）直接存取，只留下 App 用擁有者帳號的直連能通。
 
 ## 已知限制 / 之後可以再做的事
 
 - 目前沒有針對 Google 登入額外做「僅允許特定 Email/網域」的白名單機制，任何人只要有 Google 帳號都能登入並建立自己的資料。如果只想讓自己或特定人使用，可以在 `auth_google_callback.php` 建立新使用者前加上 email 白名單檢查。
 - 免費方案的 Render 服務閒置一段時間會自動休眠，第一次訪問會有幾秒鐘的冷啟動時間，屬正常現象。
+- **RLS 注意事項**：`DATABASE_URL` 一定要用資料表擁有者的帳號連線（Supabase 預設給的 `postgres` 連線字串就是）。如果之後改用權限較低的自訂資料庫使用者，查詢會「安靜地」回傳空結果而不是報錯，會很難排查。

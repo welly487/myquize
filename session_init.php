@@ -6,7 +6,8 @@
  */
 
 if (session_status() === PHP_SESSION_NONE) {
-    $config = require __DIR__ . '/config.php';
+    require_once __DIR__ . '/config.php';
+    $config = app_config();
 
     $isHttps = $config['app']['force_https']
         || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')

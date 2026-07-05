@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/session_init.php';
-include __DIR__ . '/database.php';
+include_once __DIR__ . '/database.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');

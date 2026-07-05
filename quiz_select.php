@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
-include __DIR__ . '/database.php';
+include_once __DIR__ . '/database.php';
 
 $user_id = $_SESSION['user_id'];
 $keyword = $_GET['search'] ?? '';

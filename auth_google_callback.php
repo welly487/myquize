@@ -2,7 +2,8 @@
 require_once __DIR__ . '/session_init.php';
 require_once __DIR__ . '/database.php';
 
-$config = require __DIR__ . '/config.php';
+require_once __DIR__ . '/config.php';
+$config = app_config();
 $google = $config['google'];
 
 // 1. 驗證 state，避免 CSRF / 被塞入偽造的授權碼
