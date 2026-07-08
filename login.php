@@ -14,88 +14,12 @@ $error = $_GET['error'] ?? '';
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>會員登入</title>
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "微軟正黑體", sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-    }
-
-    .login-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        padding: 40px 30px;
-        border-radius: 16px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-    }
-
-    .logo {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        border-radius: 50%;
-        margin: 0 auto 25px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        color: white;
-        font-weight: bold;
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
-    }
-
-    h1 { margin-bottom: 8px; color: #2c3e50; font-weight: 700; font-size: 1.8rem; }
-    .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 0.9rem; }
-
-    .error-msg {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-        color: white;
-        padding: 10px 16px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-weight: 500;
-        font-size: 0.9rem;
-    }
-
-    .google-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        width: 100%;
-        background: white;
-        color: #3c4043;
-        border: 1px solid #dadce0;
-        padding: 14px;
-        font-size: 1rem;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: 600;
-        font-family: inherit;
-        text-decoration: none;
-        transition: box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    .google-btn:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        background: #f8f9fa;
-    }
-
-    .google-btn svg { width: 20px; height: 20px; }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="login-container">
+<div class="login-container panel-card">
     <div class="logo">📚</div>
     <h1>歡迎回來</h1>
     <p class="subtitle">使用 Google 帳號登入試卷管理系統</p>
