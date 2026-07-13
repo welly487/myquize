@@ -95,17 +95,18 @@ h1, h2, h3 { font-weight: 700; letter-spacing: 0.01em; }
 .page-shell > .content { padding: 22px 24px; }
 
 .welcome-info {
-  position: absolute;
-  top: 18px;
-  right: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   font-size: 0.85rem;
   opacity: 0.85;
+  margin-bottom: 10px;
 }
 
 .welcome-info a {
   color: inherit;
   text-decoration: none;
-  margin-left: 12px;
   padding: 5px 14px;
   border: 1px solid rgba(245, 242, 236, 0.35);
   border-radius: var(--radius-sm);
@@ -113,6 +114,17 @@ h1, h2, h3 { font-weight: 700; letter-spacing: 0.01em; }
 }
 
 .welcome-info a:hover { background: rgba(245, 242, 236, 0.12); }
+
+/* Only float to the corner once the header is wide enough to have real
+   spare room beside a centered title, so it never overlaps the heading. */
+@media (min-width: 1024px) {
+  .welcome-info {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    margin-bottom: 0;
+  }
+}
 
 /* "panel-card": single centered dialog-style panel, e.g. login, create quiz */
 .panel-card {
@@ -286,11 +298,7 @@ textarea, select {
 
 textarea.form-input, textarea { resize: vertical; min-height: 90px; }
 
-<<<<<<< HEAD
 .search-input-wrapper { position: relative; flex: 1; min-width: 0; max-width: 400px; }
-=======
-.search-input-wrapper { position: relative; flex: 1; max-width: 400px; }
->>>>>>> 1d608e19a10d609ac69a0e703be475f7e091866a
 .search-input-wrapper i {
   position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
   color: var(--ink-soft);
@@ -301,10 +309,7 @@ textarea.form-input, textarea { resize: vertical; min-height: 90px; }
   display: flex; gap: 12px; align-items: center;
   justify-content: center; flex-wrap: wrap;
 }
-<<<<<<< HEAD
 .search-form .search-btn { flex-shrink: 0; }
-=======
->>>>>>> 1d608e19a10d609ac69a0e703be475f7e091866a
 
 /* ---------- Messages / alerts ---------- */
 
@@ -658,16 +663,6 @@ textarea.form-input, textarea { resize: vertical; min-height: 90px; }
     min-height: 44px;
   }
   .option-label { min-height: 44px; }
-<<<<<<< HEAD
-  .welcome-info {
-    position: static;
-    display: block;
-    text-align: center;
-    margin-bottom: 12px;
-  }
-  .welcome-info a { margin: 0 6px; }
-=======
->>>>>>> 1d608e19a10d609ac69a0e703be475f7e091866a
 }
 
 /* Tablet: two-column grid, only slightly larger than mobile */

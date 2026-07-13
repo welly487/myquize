@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "<!DOCTYPE html><html lang='zh-TW'><head><meta charset='UTF-8'><title>測驗結果</title>
     <link href='https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap' rel='stylesheet'>
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'>
-    <link rel='stylesheet' href='css/style.css'>
+    <link rel='stylesheet' href='css/style.css?v=3'>
     <style>:root { --grade: $grade_color; --pct: " . ($percentage * 3.6) . "deg; }</style>
     </head><body>";
 
@@ -171,7 +171,7 @@ $result = $stmt->get_result();
 <title>模擬考試</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 <div class="progress-bar" id="progressBar"></div>
