@@ -286,7 +286,11 @@ textarea, select {
 
 textarea.form-input, textarea { resize: vertical; min-height: 90px; }
 
+<<<<<<< HEAD
 .search-input-wrapper { position: relative; flex: 1; min-width: 0; max-width: 400px; }
+=======
+.search-input-wrapper { position: relative; flex: 1; max-width: 400px; }
+>>>>>>> 1d608e19a10d609ac69a0e703be475f7e091866a
 .search-input-wrapper i {
   position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
   color: var(--ink-soft);
@@ -297,7 +301,10 @@ textarea.form-input, textarea { resize: vertical; min-height: 90px; }
   display: flex; gap: 12px; align-items: center;
   justify-content: center; flex-wrap: wrap;
 }
+<<<<<<< HEAD
 .search-form .search-btn { flex-shrink: 0; }
+=======
+>>>>>>> 1d608e19a10d609ac69a0e703be475f7e091866a
 
 /* ---------- Messages / alerts ---------- */
 
@@ -651,6 +658,7 @@ textarea.form-input, textarea { resize: vertical; min-height: 90px; }
     min-height: 44px;
   }
   .option-label { min-height: 44px; }
+<<<<<<< HEAD
   .welcome-info {
     position: static;
     display: block;
@@ -658,6 +666,8 @@ textarea.form-input, textarea { resize: vertical; min-height: 90px; }
     margin-bottom: 12px;
   }
   .welcome-info a { margin: 0 6px; }
+=======
+>>>>>>> 1d608e19a10d609ac69a0e703be475f7e091866a
 }
 
 /* Tablet: two-column grid, only slightly larger than mobile */
