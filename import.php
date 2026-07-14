@@ -9,6 +9,7 @@ include_once __DIR__ . '/database.php';
 $user_id = $_SESSION['user_id'];
 $error = '';
 $success = false;
+$success_detail = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
     csrf_verify();
@@ -24,31 +25,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
         if (($handle = fopen($file, 'r')) !== false) {
             fgetcsv($handle); // Skip header
 
-            // 建立新試卷
-            $stmt_quiz = $conn->prepare("INSERT INTO quizzes (title, user_id) VALUES (?, ?) RETURNING id");
-            $stmt_quiz->bind_param("si", $quiz_title, $user_id);
-            $stmt_quiz->execute();
-            $quiz_id = $stmt_quiz->insert_id;
+            $imported = 0;
+            $skipped = 0;
+            $skipped_rows = [];
+            $row_num = 1; // 從 1 開始（不含表頭）
 
-            while (($data = fgetcsv($handle)) !== false) {
-                if (count($data) < 6) {
-                    continue; // 跳過欄位不齊全的資料列
+            try {
+                $conn->beginTransaction();
+
+                // 建立新試卷
+                $stmt_quiz = $conn->prepare("INSERT INTO quizzes (title, user_id) VALUES (?, ?) RETURNING id");
+                $stmt_quiz->bind_param("si", $quiz_title, $user_id);
+                $stmt_quiz->execute();
+                $quiz_id = $stmt_quiz->insert_id;
+
+                while (($data = fgetcsv($handle)) !== false) {
+                    $row_num++;
+
+                    if (count($data) < 6) {
+                        $skipped++;
+                        $skipped_rows[] = "第 {$row_num} 列：欄位不齊全";
+                        continue;
+                    }
+
+                    // 清掉頭尾空白與換行殘留字元（常見於 Excel 匯出的 CSV）
+                    [$question, $a, $b, $c, $d, $answer] = array_map(
+                        fn($v) => trim($v, " \t\n\r\0\x0B"),
+                        array_slice($data, 0, 6)
+                    );
+                    $answer = strtoupper($answer);
+
+                    if ($question === '' || $a === '' || $b === '' || $c === '' || $d === '') {
+                        $skipped++;
+                        $skipped_rows[] = "第 {$row_num} 列：題目或選項空白";
+                        continue;
+                    }
+
+                    if (!in_array($answer, ['A', 'B', 'C', 'D'], true)) {
+                        $skipped++;
+                        $skipped_rows[] = "第 {$row_num} 列：答案「{$answer}」不是 A/B/C/D";
+                        continue;
+                    }
+
+                    $stmt = $conn->prepare("INSERT INTO questions (question, option_a, option_b, option_c, option_d, answer, user_id) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id");
+                    $stmt->bind_param("ssssssi", $question, $a, $b, $c, $d, $answer, $user_id);
+                    $stmt->execute();
+                    $question_id = $stmt->insert_id;
+
+                    // 關聯到試卷
+                    $stmt_link = $conn->prepare("INSERT INTO quiz_questions (quiz_id, question_id) VALUES (?, ?)");
+                    $stmt_link->bind_param("ii", $quiz_id, $question_id);
+                    $stmt_link->execute();
+
+                    $imported++;
                 }
-                list($question, $a, $b, $c, $d, $answer) = $data;
 
-                $stmt = $conn->prepare("INSERT INTO questions (question, option_a, option_b, option_c, option_d, answer, user_id) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id");
-                $stmt->bind_param("ssssssi", $question, $a, $b, $c, $d, $answer, $user_id);
-                $stmt->execute();
-                $question_id = $stmt->insert_id;
-
-                // 關聯到試卷
-                $stmt_link = $conn->prepare("INSERT INTO quiz_questions (quiz_id, question_id) VALUES (?, ?)");
-                $stmt_link->bind_param("ii", $quiz_id, $question_id);
-                $stmt_link->execute();
+                if ($imported === 0) {
+                    // 一題都沒成功，整份匯入沒有意義，連試卷本身都不要留下
+                    $conn->rollBack();
+                    $error = '沒有任何一列資料格式正確，請檢查 CSV 內容後再試一次。';
+                    if ($skipped_rows) {
+                        $error .= ' (' . implode('；', array_slice($skipped_rows, 0, 5)) . ')';
+                    }
+                } else {
+                    $conn->commit();
+                    $success = true;
+                    if ($skipped > 0) {
+                        $success_detail = "已匯入 {$imported} 題，略過 {$skipped} 筆格式錯誤的資料：" .
+                                 implode('；', array_slice($skipped_rows, 0, 5)) .
+                                 ($skipped > 5 ? '…' : '');
+                    }
+                }
+            } catch (PDOException $e) {
+                $conn->rollBack();
+                $error = '匯入過程發生資料庫錯誤，請確認 CSV 格式是否正確，或稍後再試一次。';
             }
 
             fclose($handle);
-            $success = true;
         } else {
             $error = "無法開啟檔案";
         }
@@ -79,7 +132,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
                 <?php if (!empty($success)): ?>
                     <div class="alert-custom alert-success-custom">
                         <i class="fas fa-check-circle me-2"></i>
-                        匯入成功！試卷已成功建立，您可以開始使用了！
+                        <?php if (!empty($success_detail)): ?>
+                            <?= htmlspecialchars($success_detail) ?>
+                        <?php else: ?>
+                            匯入成功！試卷已成功建立，您可以開始使用了！
+                        <?php endif; ?>
                     </div>
                 <?php elseif (!empty($error)): ?>
                     <div class="alert-custom alert-danger-custom">
@@ -93,9 +150,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
                     <p class="mb-3">請上傳包含以下欄位的 CSV 檔案（需包含標題列）：</p>
                     
                     <div class="csv-example">
-題目, A選項, B選項, C選項, D選項,正確答案
-世界上最大的大陸是什麼？, 亞洲, 非洲, 歐洲, 南極洲,A
-太陽是什麼類型的天體？, 星星, 行星, 彗星, 衛星,A
+題目, A選項, B選項, C選項, D選項, 正確答案
+世界上最大的大陸是什麼？, 亞洲, 非洲, 歐洲, 南極洲, A
+太陽是什麼類型的天體？, 星星, 行星, 彗星, 衛星, A
                     </div>
 
                     <a href="sample.csv" class="download-btn">
