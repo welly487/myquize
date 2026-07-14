@@ -172,6 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
                         </div>
                         <div class="text-muted">支援 CSV 格式檔案</div>
                         <div class="file-info" id="fileInfo" style="display: none;"></div>
+                         <input type="file" name="csv_file" id="csv_file" class="file-input-custom" accept=".csv" required>
                     </div>
 
                     <div class="button-group">
