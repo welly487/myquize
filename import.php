@@ -93,9 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
                     <p class="mb-3">請上傳包含以下欄位的 CSV 檔案（需包含標題列）：</p>
                     
                     <div class="csv-example">
-題目, A選項, B選項, C選項, D選項, 正確答案
-世界上最大的大陸是什麼？, 亞洲, 非洲, 歐洲, 南極洲, A
-太陽是什麼類型的天體？, 星星, 行星, 彗星, 衛星, A
+題目, A選項, B選項, C選項, D選項,正確答案
+世界上最大的大陸是什麼？, 亞洲, 非洲, 歐洲, 南極洲,A
+太陽是什麼類型的天體？, 星星, 行星, 彗星, 衛星,A
                     </div>
 
                     <a href="sample.csv" class="download-btn">
